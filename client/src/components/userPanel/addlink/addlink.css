@@ -1,0 +1,72 @@
+div.addlinkcontent {
+  margin-left: 200px;
+  padding: 1px 16px;
+}
+
+.addsign {
+  text-align: center;
+}
+
+.addedlink {
+  color: #7ddc1f !important;
+  display: block;
+}
+
+.failaddedlink {
+  color: red !important;
+  display: block;
+}
+
+.addedlinkrem{
+  display: none;
+}
+
+.failaddedlinkrem {
+  display: none;
+}
+
+.errstyle {
+  width: 100%;
+  height: 45px;
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.errflexwrapper {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  padding: 1px 5px;
+}
+
+
+.addlinkwrapper {
+  position: relative;
+  top: initial;
+  left: initial;
+  transform: initial;
+  margin-top: 69px;
+}
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 98%;
+    height: auto;
+    position: relative;
+    margin-left: 3px;
+  }
+  .sidebar a {float: left;}
+  div.addlinkcontent {margin-left: 0;}
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+}

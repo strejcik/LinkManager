@@ -1,0 +1,90 @@
+div.managelinkcontent {
+  margin-left: 200px;
+  padding: 1px 16px;
+}
+
+
+.managelinkwrapper {
+  position: relative;
+  top: initial;
+  left: initial;
+  transform: initial;
+  margin-top: 69px;
+  word-wrap: break-word;
+  font-size: 16px;
+}
+
+.managelinkitem {
+    padding: 10px;
+    border-radius: 10px;
+    color: black;
+    border: 2px solid #f5f5f5;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+
+.cog {
+  text-align: center;
+  font-size: 40px;
+}
+
+
+.searchinput {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  font-size: 16px;
+  color: black;
+}
+
+.searchicon {
+  font-size: 40px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 55px;
+}
+
+.activefilterbutton {
+  color:gold !important;
+}
+
+
+.flexwrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.filterinputbox {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  padding: 1px 5px;
+}
+
+.p-button {
+  width: 100%;
+}
+
+.p-selectbutton {
+  display: flex;
+  gap: 10px;
+}
+
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 98%;
+    height: auto;
+    position: relative;
+    margin-left: 3px;
+  }
+  .sidebar a {float: left;}
+  div.managelinkcontent {margin-left: 0;}
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+}

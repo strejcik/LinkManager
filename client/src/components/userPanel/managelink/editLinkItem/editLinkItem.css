@@ -1,0 +1,53 @@
+.editlinkwrapper {
+    position: relative;
+    top: initial;
+    left: initial;
+    transform: initial;
+    margin-top: 69px;
+    word-wrap: break-word;
+    font-size: 20px;
+    font-family: initial;
+}
+
+.shortenedlink {
+    text-decoration: none;
+    color: dodgerblue;
+}
+
+.originallink {
+    text-decoration: none;
+}
+
+.allowedips {
+    color: #7ddc1f;
+}
+
+.editlinkcontent {
+    margin-left: 200px;
+    padding: 1px 16px;
+}
+
+.centertextinput {
+    text-align: center;
+}
+
+.editsign {
+    text-align: center;
+    font-size: 36px;
+}
+
+.editdatabutton {
+    height: 55px !important;
+    border-top-right-radius: 40px !important;
+    border-bottom-right-radius: 40px !important;
+    border-bottom-left-radius: 0px !important;
+    border-top-left-radius: 0px !important;
+    margin-left: 7px !important;
+}
+
+@media screen and (max-width: 700px) {
+    .editlinkcontent {
+        margin-left: 0px;
+    }
+  }
+  
