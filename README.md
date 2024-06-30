@@ -25,6 +25,7 @@ Link Manager is React-Node application that shortens link and redirect user to s
 ## Installation
 
 Link Manager requires [NodeJS](https://nodejs.org/) v22.3.0 to run.
+
 Link Manager requires [ReactJS](https://react.dev/) v18.3.1 to run.
 
 
