@@ -13,11 +13,7 @@ Link Manager is React-Node application that shortens link and redirect user to s
 - Adding link(s) description
 - Adding category
 - Adding AllowedIP(s) for displaying specific link
-- Filtering current link(s) by:
-(1). Link
-(2). Category
-(3). Description
-(4). AllowedIP(s)
+- Filtering current link(s) by: Link, Category, Description, AllowedIP(s)
 
 ## Tech
 
