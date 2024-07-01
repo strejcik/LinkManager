@@ -38,7 +38,6 @@ const Login = () => {
         }
 
     }, [auth, navigate])
-
     return (
         <div className="wrapper">
             <form onSubmit={handleLogin}>

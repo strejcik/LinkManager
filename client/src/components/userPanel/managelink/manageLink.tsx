@@ -1,9 +1,20 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback, useContext} from "react";
 import './manageLink.css';
 import { GetLinksRequest } from '../../../services/auth/manageLinkService.tsx'
 import ManageLinkItem from './manageLinkItem.tsx';
 import { SelectButton } from 'primereact/selectbutton';
+import { DeleteLinkRequest } from "../../../services/auth/deleteLinkService.tsx";
+import { useNavigate} from "react-router-dom";
+
+import AuthContext from '../../../context/AuthContext.tsx';
+import AuthCheck from '../../../services/auth/authCheck.tsx';
+
+
+
 const ManageLink = () => {
+    const {auth, setAuth } = useContext(AuthContext);
+    const navigate = useNavigate();
+
 
     const [filter, setFilter] = useState('link');
     const filterOptions = [
@@ -31,13 +42,20 @@ const ManageLink = () => {
         allowedips: [],
     }]);
 
+    useEffect(() => {
+        AuthCheck(navigate, setAuth);
+    },[auth]);
+
+
+
     const [filteredLinks, setFilteredLinks] = useState<d[]>([])
     useEffect(() => {
         GetLinksRequest(setData, setFilteredLinks);
     },[]);
 
-    const handleFilter = (event) => {
-        const value = event.target.value;
+
+      const handleFilter = (e) => {
+        const value = e.target.value;
         let filtered;
         if(filter === 'link') {
             filtered = data.filter(link => link.originalLink.includes(value));
@@ -52,12 +70,29 @@ const ManageLink = () => {
         }
         
         setFilteredLinks(filtered);
-      };
+      }
+
+      const deleteLink = (id) => {
+        let filtered = data.filter(e => !e.id.includes(id));
+        setFilteredLinks(() => [...filtered]);
+      }
+
+      
+    let handleRemove= useCallback(async(e, id) => {
+        e.stopPropagation();
+        try {
+            await DeleteLinkRequest(id);
+            deleteLink(id)
+        } catch (error) {
+            alert(error.message);
+            console.error(error.message || 'An error occurred during sign-in');
+        }
+
+      }, [filteredLinks]);
 
       const filterByButtons = (options) => {
         return (<div className={'filterinputbox'}><button className={filter === options.value ? `activefilterbutton` : ``} name={options.value}>{options.value}</button></div>);
       }
-
     return (
         <>
         <div className="managelinkcontent ">
@@ -72,7 +107,7 @@ const ManageLink = () => {
             </div>
             <SelectButton value={filter} onChange={(e) => { setFilter(prevState => e.value !== null? e.value : prevState); setFilteredLinks(data)}}  optionLabel="value" options={filterOptions} itemTemplate={filterByButtons}/>
 
-            <ManageLinkItem filteredLinks={filteredLinks}/>
+            <ManageLinkItem filteredLinks={filteredLinks} handleRemove={handleRemove}/>
            
             </div>
         </div>

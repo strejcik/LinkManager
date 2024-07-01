@@ -31,7 +31,7 @@ const App = () => {
               <Route path="managelink" element={<ManageLink />}/>
               <Route path="managelink/edit/:id" element={<EditLinkItem />} />
           </Route>
-          <Route path="*" element={<NoMatchPage />} />
+        <Route path="*" element={<NoMatchPage />} />
       </Route>
     )
   )

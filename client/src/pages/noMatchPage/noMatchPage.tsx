@@ -2,8 +2,6 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './noMatchPage.css';
 const NoMatchPage = () => {
-
-
     return (
         <>
         <div className="wrapper404">

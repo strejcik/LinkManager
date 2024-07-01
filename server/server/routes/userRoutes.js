@@ -111,9 +111,7 @@ router.post('/addlink', [authenticateJWT, addLinkValidation], handleAddLinkValid
 router.post('/editlink', [authenticateJWT, editLinkValidation], handleEditLinkValidationErrors, (req, res) => {
   const { user, data, id } = req.body;
   data.originalLink = formatLink(data.originalLink);
-  //  await Link.findOneAndUpdate( { _id: id }, data, { upsert: true, new: true }).then(() => {
-  //   return res.status(200).json({ message: 'Editted link' });
-  //  });
+
 
   Link.findOneAndUpdate(
     { _id: id },
@@ -129,6 +127,24 @@ router.post('/editlink', [authenticateJWT, editLinkValidation], handleEditLinkVa
   );
 
 
+});
+
+
+
+
+router.post('/deletelink', [authenticateJWT], (req, res) => {
+  const { data } = req.body;
+
+
+  Link.findOneAndRemove({_id: data }, 
+    function (err, docs) { 
+    if (err){ 
+      console.error(err);
+    } 
+    else{ 
+      return res.status(200).json({ message: 'Removed link' });
+    } 
+    }); 
 });
 
 

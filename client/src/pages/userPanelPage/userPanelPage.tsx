@@ -13,9 +13,9 @@ import AuthCheck from '../../services/auth/authCheck.tsx';
 const UserPanelPage = () => {
   const {auth, setAuth} = useContext(AuthContext);
   const navigate = useNavigate();
-  useEffect(() => {
-      AuthCheck(navigate, setAuth);
-    },[auth]);
+//   useEffect(() => {
+//       AuthCheck(navigate, setAuth);
+//     },[auth]);
     return (
         <>
             <Sidebar/>

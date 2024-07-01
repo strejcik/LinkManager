@@ -21,6 +21,16 @@ div.managelinkcontent {
     border: 2px solid #f5f5f5;
     margin-top: 20px;
     cursor: pointer;
+    position: relative;
+}
+
+.removeLinkItem {
+  width: initial !important;
+  height: initial !important;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  color: red !important;
 }
 
 

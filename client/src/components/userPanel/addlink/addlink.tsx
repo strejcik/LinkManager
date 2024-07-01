@@ -38,8 +38,6 @@ const AddLink = () => {
     const [description, setDescription] = useState<string>('');
     const [allowedip, setAllowedIp] = useState<string>('');
     const [Clicked,setState] = useState<boolean>(false);
-    const [linkValidatorStatus, setLinkValidatorStatus] = useState<boolean>(false);
-    const [ipalidatorStatus, setIpValidatorStatus] = useState<boolean>(false);
     const {auth, setAuth } = useContext(AuthContext);
     const { setAddLinkResponse, addLinkResponse } = useContext(AddLinkContext);
     const navigate = useNavigate();
@@ -63,21 +61,15 @@ const AddLink = () => {
         let ipData = allowedip.length === 0? allowAllIp : IpValidator(allowedip);
         if( allowedip.length === 0) {
             if( linkData.status) {
-                setLinkValidatorStatus(true);
                 userData = {
                     links: linkData.data,
                     category,
                     description,
                     allowedips: []
                 };
-            } else {
-                setLinkValidatorStatus(false);
             }
-            
         } else {
             if( linkData.status && ipData.status ) {
-                setLinkValidatorStatus(true);
-                setIpValidatorStatus(true);
                 userData = {
                     links: linkData.data,
                     category,
@@ -85,9 +77,6 @@ const AddLink = () => {
                     allowedips: ipData.data
                 };
     
-            } else {
-                setLinkValidatorStatus(false);
-                setIpValidatorStatus(false);
             }
         }
 
@@ -106,7 +95,7 @@ const AddLink = () => {
         
     }
 
-
+    
     return (
         <>
         <div className="addlinkcontent">
