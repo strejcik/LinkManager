@@ -134,15 +134,31 @@ router.post('/editlink', [authenticateJWT, editLinkValidation], handleEditLinkVa
 
 router.post('/deletelink', [authenticateJWT], (req, res) => {
   const { data } = req.body;
-
+  const user = req.user;
 
   Link.findOneAndRemove({_id: data }, 
     function (err, docs) { 
     if (err){ 
       console.error(err);
+      return res.json({ message: 'Could not remove link' });
     } 
-    else{ 
-      return res.status(200).json({ message: 'Removed link' });
+    else{
+
+    User.findOne({email: user.email})
+    .exec(function (err, doc) {
+      if (err){ 
+        console.error(err);
+        return res.json({ message: 'Could not remove link' });
+      } 
+      else {
+        let tempLinks;
+        tempLinks = doc.links.filter((e) => e.toString() !== data);
+        doc.links = [...tempLinks];
+        doc.save();
+        return res.status(200).json({ message: 'Removed link' });
+      }
+    });
+      
     } 
     }); 
 });
