@@ -1,14 +1,13 @@
-# Link Manager
+<div style="text-align:center"><img src="https://i.imgur.com/QpGaTrF.png"/></div>
+
+# 🔗Link Manager
 
 Link Manager is React-Node application that shortens link and redirect user to specific url.
 
-# Demo
+# 📺Demo
 [Watch Me](https://youtu.be/vcKkCst-iHQ)
 
-<div style="text-align:center"><img src="https://i.imgur.com/QpGaTrF.png"/></div>
-
-
-## Features
+## 👇Features
 
 - Shortening link(s)
 - Redirecting User from shortened-link to specific url address
@@ -17,14 +16,14 @@ Link Manager is React-Node application that shortens link and redirect user to s
 - Adding AllowedIP(s) for displaying specific link
 - Filtering current link(s) by: Link, Category, Description, AllowedIP(s)
 
-## Tech
+## 💡Tech
+![image](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![image](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![image](https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![image](https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white)
+![image](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 
-- React
-- NodeJS
-- Express
-- MongoDB
-
-## Installation
+## 💿Installation
 
 Link Manager requires [NodeJS](https://nodejs.org/) v22.3.0 to run.
 
@@ -51,6 +50,7 @@ npm i
 npm start
 ```
 
-## Author
+## 🙋‍♂️Author
+[Contact Me](https://www.linkedin.com/in/bartosz-gabruś/)
 
 [@strejcik](https://www.github.com/strejcik)
