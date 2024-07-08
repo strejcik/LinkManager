@@ -7,7 +7,9 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Link from './server/models/links.js';
-
+import Views from './server/models/views.js';
+import User from './server/models/users.js';
+import mongoose from 'mongoose';
 import requestIp from 'request-ip';
 
 
@@ -47,7 +49,35 @@ app.get('/l/*', async (req,res) => {
 
           if(link.shortenedLink === shortLink){
             if(link.allowedips.length === 0) {
+
+
+              let viewId = new mongoose.Types.ObjectId();
+              
+              Views.create({
+                _id: viewId,
+                views: 1,
+                ip: clientIp,
+                link: link._id,
+                originalLink: link.originalLink,
+                shortenedLink: link.shortenedLink,
+                user: link.user
+              });
+              
+              User.findOneAndUpdate(
+                { _id: link.user },
+                { $push: { views: viewId } },
+                { new: true },
+                (err, l) => {
+                  if (err) {
+                    console.error(err);
+                    return;
+                  }
+                  //console.log(l);
+                }
+              );
+
               res.status(301).redirect(link.originalLink);
+
             } else {
               link.allowedips.forEach((allowedIp) => {
                 if(allowedIp === clientIp) {

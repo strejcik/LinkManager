@@ -5,7 +5,7 @@ import LoginUserPage from './pages/loginUserPage/loginUserPage.tsx';
 import RegisterUserPage from './pages/registerUserPage/registerUserPage.tsx';
 import UserPanelPage from './pages/userPanelPage/userPanelPage.tsx';
 import NoMatchPage from './pages/noMatchPage/noMatchPage.tsx';
-
+import LinkViewsPage from './pages/linkViewsPage/linkViewsPage.tsx';
 
 import Root from './components/Root.tsx';
 import AddLink from './components/userPanel/addlink/addlink.tsx';
@@ -30,6 +30,7 @@ const App = () => {
               <Route path="addlink" element={<AddLink />} />
               <Route path="managelink" element={<ManageLink />}/>
               <Route path="managelink/edit/:id" element={<EditLinkItem />} />
+              <Route path="linkviews" element={<LinkViewsPage />} />
           </Route>
         <Route path="*" element={<NoMatchPage />} />
       </Route>

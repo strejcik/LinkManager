@@ -1,0 +1,19 @@
+.linkviewswrapper {
+    position: relative;
+    top: initial;
+    left: initial;
+    transform: initial;
+    margin-top: 69px;
+}
+
+div.linkviewscontent {
+    margin-left: 200px;
+    padding: 1px 16px;
+}
+
+@media screen and (max-width: 700px) {
+    div.linkviewscontent {
+        margin-left: 0;
+    }
+}
+  

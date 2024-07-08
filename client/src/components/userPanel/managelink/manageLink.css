@@ -88,7 +88,7 @@ div.managelinkcontent {
     position: relative;
     margin-left: 3px;
   }
-  .sidebar a {float: left;}
+  .sidebar a {float: none;text-align: center;}
   div.managelinkcontent {margin-left: 0;}
 }
 

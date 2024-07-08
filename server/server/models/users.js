@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    links: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Link' }]
+    links: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Link' }],
+    views: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Views' }]
   },
   {
     timestamps: true,

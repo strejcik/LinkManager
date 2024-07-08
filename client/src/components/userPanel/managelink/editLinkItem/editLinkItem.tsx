@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import {useParams, useNavigate} from "react-router-dom";
 import { EditLinkRequest, GetLinkRequest } from '../../../../services/auth/editLinkService.tsx'
+import { GetViewsRequest } from '../../../../services/auth/viewsLinkService.tsx'
 import AuthContext from '../../../../context/AuthContext.tsx';
 import AuthCheck from '../../../../services/auth/authCheck.tsx';
 import LinkValidator from '../../addlink/linkValidator/linkValidator.tsx';
@@ -59,7 +60,9 @@ const EditLinkItem  = () => {
       }
 
 
-
+    // useEffect(() => {
+    //     GetViewsRequest();
+    // });
     useEffect(() => {
         AuthCheck(navigate, setAuth);
     },[auth]);

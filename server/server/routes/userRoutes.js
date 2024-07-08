@@ -135,32 +135,48 @@ router.post('/editlink', [authenticateJWT, editLinkValidation], handleEditLinkVa
 router.post('/deletelink', [authenticateJWT], (req, res) => {
   const { data } = req.body;
   const user = req.user;
+  var shortLink;
+  Link.findOne({_id: data }).then(linkdoc => {
+    shortLink = linkdoc.shortenedLink;
 
-  Link.findOneAndRemove({_id: data }, 
-    function (err, docs) { 
-    if (err){ 
-      console.error(err);
-      return res.json({ message: 'Could not remove link' });
-    } 
-    else{
 
-    User.findOne({email: user.email})
-    .exec(function (err, doc) {
+    Link.findOneAndRemove({_id: data }, 
+      function (err, docs) { 
       if (err){ 
         console.error(err);
         return res.json({ message: 'Could not remove link' });
       } 
-      else {
-        let tempLinks;
-        tempLinks = doc.links.filter((e) => e.toString() !== data);
-        doc.links = [...tempLinks];
-        doc.save();
-        return res.status(200).json({ message: 'Removed link' });
-      }
-    });
-      
-    } 
-    }); 
+      else{
+  
+      User.findOne({email: user.email})
+      .populate({
+        path:"views",
+        model:"Views"
+      })
+      .exec(function (err, doc) {
+        if (err){ 
+          console.error(err);
+          return res.json({ message: 'Could not remove link' });
+        } 
+        else {
+          let tempLinks;
+          let tempViews;
+          tempLinks = doc.links.filter((e) => e.toString() !== data);
+          tempViews = doc.views.filter((e) => e.shortenedLink !== shortLink)
+          doc.links = [...tempLinks];
+          doc.views = [...tempViews];
+          doc.save();
+          return res.status(200).json({ message: 'Removed link' });
+        }
+      });
+        
+      } 
+      }); 
+
+
+  }).catch(error => {
+    return res.status(500).json(error);
+});;
 });
 
 
@@ -243,6 +259,46 @@ router.get('/getlink/:id', authenticateJWTGet,  async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+router.get('/getlinkviews', authenticateJWTGet, async (req, res) => {
+  let user = req.user.email;
+  var responseData = [];
+
+
+  try {
+    await User.findOne({email: user})
+    .populate({
+      path:"views",
+      model:"Views"
+    })
+    .exec(function (err, data) {
+  
+      return res.status(200).json(data.views);
+    });
+  }catch(err) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+
+
+
+});
+
+
+
+
 
 
 export default router;
