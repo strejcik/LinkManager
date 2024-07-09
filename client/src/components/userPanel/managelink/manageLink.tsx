@@ -73,8 +73,8 @@ const ManageLink = () => {
       }
 
       const deleteLink = (id) => {
-        let filtered = data.filter(e => !e.id.includes(id));
-        setFilteredLinks(() => [...filtered]);
+        //let filtered = data.filter(e => !e.id.includes(id));
+        setFilteredLinks((prev) => prev.filter(e => !e.id.includes(id)));
       }
 
       
