@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './loginUser.css';
-import AuthContext from "../../context/AuthContext.tsx";
-import { LoginUser } from "../../services/auth/authService.tsx";
+import AuthContext from "../../context/authContext.tsx";
+import { loginUser } from "../../services/auth/authService.tsx";
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -23,7 +23,7 @@ const Login = () => {
 
         try {
             //Login user
-            await LoginUser(userData, setAuth);
+            await loginUser(userData, setAuth);
         } catch (error) {
             alert(error.message);
             console.error(error.message || 'An error occurred during sign-in');

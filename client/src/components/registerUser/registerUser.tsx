@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../../context/AuthContext.tsx";
-import { RegisterUser } from "../../services/auth/authService.tsx";
+import authContext from "../../context/authContext.tsx";
+import { registerUser } from "../../services/auth/authService.tsx";
 
 
 const Register = () => {
@@ -12,7 +12,7 @@ const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const navigate = useNavigate();
 
-    const {  setAccountCreated, accountCreated } = useContext(AuthContext);
+    const {  setAccountCreated, accountCreated } = useContext(authContext);
 
     const validateEmail = (email:string) => {
         const re =
@@ -36,7 +36,7 @@ const Register = () => {
                 setError('Password must be at least 8 chars long');
                 throw new Error('Password must be at least 8 chars long, Please try again')
             }
-            RegisterUser(email, password, setAccountCreated);
+            registerUser(email, password, setAccountCreated);
 
         } catch (error) {
             // Handle any errors that occur during registration

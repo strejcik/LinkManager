@@ -1,10 +1,9 @@
 import Cookies from "js-cookie";
 
-export const GetLinkRequest = async(id, setLinkResponse) => {
-  const loc = window.location;
-  //${loc.protocol}//${loc.hostname}${loc.hostname === 'localhost' ? ':5000' : ''}/api/getlink/${id}
+export const getLinkRequest = async(id, setLinkResponse) => {
+  let endpoint = process.env.REACT_APP_IS_LOCALHOST === 'true'? (process.env.REACT_APP_API_BASE_URL + ':' + process.env.REACT_APP_API_BASE_URL_PORT + `/api/getlink/${id}`) : (process.env.REACT_APP_API_BASE_URL_SSL + `/api/getlink/${id}`);
     return new Promise((resolve, reject) => {
-      fetch(`${loc.protocol}//${loc.hostname}${loc.hostname === 'localhost' ? ':5000' : ''}/api/getlink/${id}`, {
+      fetch(endpoint, {
         method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -24,11 +23,10 @@ export const GetLinkRequest = async(id, setLinkResponse) => {
 
 
 
-  export const EditLinkRequest = async(id:any, data, setEditLinkResponse) => {
-    const loc = window.location;
-    //${loc.protocol}//${loc.hostname}${loc.hostname === 'localhost' ? ':5000' : ''}
+  export const editLinkRequest = async(id:any, data, setEditLinkResponse) => {
+    let endpoint = process.env.REACT_APP_IS_LOCALHOST === 'true'? (process.env.REACT_APP_API_BASE_URL + ':' + process.env.REACT_APP_API_BASE_URL_PORT + `/api/editlink`) : (process.env.REACT_APP_API_BASE_URL_SSL + `/api/editlink`);
       return new Promise((resolve, reject) => {
-        fetch(`${loc.protocol}//${loc.hostname}${loc.hostname === 'localhost' ? ':5000' : ''}/api/editlink`, {
+        fetch(endpoint, {
           method: 'POST',
               headers: {
                   'Content-Type': 'application/json',

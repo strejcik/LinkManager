@@ -1,15 +1,15 @@
 import { createContext, SetStateAction, Dispatch } from 'react';
 
 
-interface AddLinkContextInterface {
+interface addLinkContextInterface {
     addLinkResponse: boolean;
     setAddLinkResponse: Dispatch<SetStateAction<boolean>>;
   }
 
 
-const AddLinkContext = createContext<AddLinkContextInterface>({
+const addLinkContext = createContext<addLinkContextInterface>({
     addLinkResponse: false,
     setAddLinkResponse: () => {},
 });
 
-export default AddLinkContext;
+export default addLinkContext;

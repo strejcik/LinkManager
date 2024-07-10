@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/users.js';
 import Link from '../models/links.js';
+import Views from '../models/views.js';
 import { authenticateJWT, authenticateJWTGet } from '../middlewares/authMiddleware.js';
 import { nanoid } from 'nanoid';
 import { registerValidation, handleRegisterValidationErrors } from '../middlewares/registerMiddleware.js';
@@ -139,7 +140,6 @@ router.post('/deletelink', [authenticateJWT], (req, res) => {
   Link.findOne({_id: data }).then(linkdoc => {
     shortLink = linkdoc.shortenedLink;
 
-
     Link.findOneAndRemove({_id: data }, 
       function (err, docs) { 
       if (err){ 
@@ -166,7 +166,16 @@ router.post('/deletelink', [authenticateJWT], (req, res) => {
           doc.links = [...tempLinks];
           doc.views = [...tempViews];
           doc.save();
-          return res.status(200).json({ message: 'Removed link' });
+
+          Views.deleteMany({shortenedLink: shortLink}, 
+            function (err, docs) { 
+            if (err){ 
+              console.error(err);
+              return res.json({ message: 'Could not remove link' });
+            } 
+            });
+            return res.status(200).json({ message: 'Removed link' });
+          
         }
       });
         
@@ -274,7 +283,6 @@ router.get('/getlink/:id', authenticateJWTGet,  async (req, res) => {
 
 router.get('/getlinkviews', authenticateJWTGet, async (req, res) => {
   let user = req.user.email;
-  var responseData = [];
 
 
   try {
@@ -284,7 +292,10 @@ router.get('/getlinkviews', authenticateJWTGet, async (req, res) => {
       model:"Views"
     })
     .exec(function (err, data) {
-  
+      let responseData = [];
+      data.views.forEach(e => {
+        responseData.push({originalLink: e.originalLink, shortenedLink: e.shortenedLink});
+      })  
       return res.status(200).json(data.views);
     });
   }catch(err) {

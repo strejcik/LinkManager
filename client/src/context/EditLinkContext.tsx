@@ -1,15 +1,15 @@
 import { createContext, SetStateAction, Dispatch } from 'react';
 
 
-interface EditLinkContextInterface {
+interface editLinkContextInterface {
     linkResponse: String;
     setLinkResponse: Dispatch<SetStateAction<string>>;
   }
 
 
-const EditLinkContext = createContext<EditLinkContextInterface>({
+const editLinkContext = createContext<editLinkContextInterface>({
     linkResponse: '',
     setLinkResponse: () => {},
 });
 
-export default EditLinkContext;
+export default editLinkContext;

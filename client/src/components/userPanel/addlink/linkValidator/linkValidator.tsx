@@ -1,5 +1,5 @@
 import validator from 'validator'
-const LinkValidator = (data) => {
+const linkValidator = (data) => {
     let linkData = data.toString().split(',');
     let status = true;
     linkData = data.toString().split(' ');
@@ -32,4 +32,4 @@ const LinkValidator = (data) => {
     };
 }
 
-export default LinkValidator;
+export default linkValidator;

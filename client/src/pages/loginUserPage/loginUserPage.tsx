@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Login from '../../components/loginUser/loginUser.tsx';
+import Login from '../../components/LoginUser/LoginUser.tsx';
 const LoginUserPage = () => {
     return (
         <>

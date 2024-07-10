@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import LinkValidator from './linkValidator/linkValidator.tsx';
+import linkValidator from './linkValidator/linkValidator.tsx';
 import IpValidator from './ipValidator/ipValidator.tsx';
-import { AddLinkRequest } from '../../../services/auth/addLinkService.tsx'
-import AuthContext from '../../../context/AuthContext.tsx';
-import AddLinkContext from '../../../context/AddLinkContext.tsx';
-import './addlink.css';
+import { addLinkRequest } from '../../../services/auth/addLinkService.tsx'
+import AuthContext from '../../../context/authContext.tsx';
+import AddLinkContext from '../../../context/addLinkContext.tsx';
+import './addLink.css';
 
-import AuthCheck from '../../../services/auth/authCheck.tsx';
+import authCheck from '../../../services/auth/authCheck.tsx';
 
 
 
@@ -46,7 +46,7 @@ const AddLink = () => {
 
 
     useEffect(() => {
-        AuthCheck(navigate, setAuth);
+        authCheck(navigate, setAuth);
     },[auth]);
 
       useEffect(() => {
@@ -57,7 +57,7 @@ const AddLink = () => {
     const handleSubmit = async(e) => {
         e.preventDefault();
         let allowAllIp = {status:true, data:[]};
-        let linkData = LinkValidator(link);
+        let linkData = linkValidator(link);
         let ipData = allowedip.length === 0? allowAllIp : IpValidator(allowedip);
         if( allowedip.length === 0) {
             if( linkData.status) {
@@ -82,7 +82,7 @@ const AddLink = () => {
 
         if(!isEmpty(userData)) {
             try {
-                await AddLinkRequest(userData, setAddLinkResponse);
+                await addLinkRequest(userData, setAddLinkResponse);
                 setLink(''); setCategory(''); setDescription(''); setAllowedIp('');
             } catch (error) {
                 console.error(error.message || 'An error occurred during adding link(s)');
@@ -105,7 +105,7 @@ const AddLink = () => {
                     
                     <div className={'errflexwrapper'}>
                         {link.length === 0 && Clicked && !addLinkResponse? <button disabled className={Clicked && link.length === 0? 'failaddedlink errstyle': 'failaddedlinkrem'}>Link(s) can not be empty ✗</button> : <></>}
-                        {Clicked && !LinkValidator(link).status && !addLinkResponse && <button disabled className={Clicked ? 'failaddedlink errstyle': 'failaddedlinkrem'}>Link(s) validation failed ✗</button>}
+                        {Clicked && !linkValidator(link).status && !addLinkResponse && <button disabled className={Clicked ? 'failaddedlink errstyle': 'failaddedlinkrem'}>Link(s) validation failed ✗</button>}
                         {Clicked && !IpValidator(allowedip).status && !addLinkResponse && <button disabled className={Clicked ? 'failaddedlink errstyle': 'failaddedlinkrem'}>IP(s) validation failed ✗</button>}
                         {category.length === 0 && Clicked ? !addLinkResponse && <button disabled className={Clicked && category.length === 0? 'failaddedlink errstyle': 'failaddedlinkrem'}>Category can not be empty ✗</button> : <></>}
                         {description.length === 0 && Clicked ? !addLinkResponse && <button disabled className={Clicked && description.length === 0? 'failaddedlink errstyle': 'failaddedlinkrem'}>Description can not be empty ✗</button> : <></>}

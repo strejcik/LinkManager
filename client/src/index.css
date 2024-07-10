@@ -3,6 +3,6 @@ body {
   background-color: dodgerblue;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: url(./pattern/pattern.svg);
+  background-image: url(./assets/pattern.svg);
   height: 100vh; 
 }

@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import {useParams, useNavigate} from "react-router-dom";
-import { EditLinkRequest, GetLinkRequest } from '../../../../services/auth/editLinkService.tsx'
-import { GetViewsRequest } from '../../../../services/auth/viewsLinkService.tsx'
-import AuthContext from '../../../../context/AuthContext.tsx';
+import { editLinkRequest, getLinkRequest } from '../../../../services/auth/editLinkService.tsx'
+import AuthContext from '../../../../context/authContext.tsx';
 import AuthCheck from '../../../../services/auth/authCheck.tsx';
-import LinkValidator from '../../addlink/linkValidator/linkValidator.tsx';
-import IpValidator from '../../addlink/ipValidator/ipValidator.tsx';
+import linkValidator from '../../AddLink/linkValidator/linkValidator.tsx';
+import ipValidator from '../../AddLink/ipValidator/ipValidator.tsx';
 import './editLinkItem.css';
 
 const EditLinkItem  = () => {
@@ -60,15 +59,12 @@ const EditLinkItem  = () => {
       }
 
 
-    // useEffect(() => {
-    //     GetViewsRequest();
-    // });
     useEffect(() => {
         AuthCheck(navigate, setAuth);
     },[auth]);
 
     useEffect(() => {
-        GetLinkRequest(id, setData);
+        getLinkRequest(id, setData);
     },[Clicked]);
 
     useEffect(() => {
@@ -97,8 +93,8 @@ const EditLinkItem  = () => {
     const updateState = async() => {
 
         let allowAllIp = {status:true, data:[]};
-        let linkData = LinkValidator(data[0].originalLink);
-        let ipData = allowedIp.length === 0? allowAllIp : IpValidator(allowedIp);
+        let linkData = linkValidator(data[0].originalLink);
+        let ipData = allowedIp.length === 0? allowAllIp : ipValidator(allowedIp);
 
 
 
@@ -141,7 +137,7 @@ const EditLinkItem  = () => {
 
         if(!isEmpty(userData)) {
             try {
-                await EditLinkRequest(id, userData, setEditLinkResponse);
+                await editLinkRequest(id, userData, setEditLinkResponse);
             } catch (error) {
                 console.error(error.message || 'An error occurred during adding link(s)');
             }

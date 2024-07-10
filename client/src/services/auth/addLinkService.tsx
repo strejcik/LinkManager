@@ -1,10 +1,11 @@
 import Cookies from "js-cookie";
 
-export const AddLinkRequest = async(d:object, setAddLinkResponse) => {
+export const addLinkRequest = async(d:object, setAddLinkResponse) => {
   const loc = window.location;
   //${loc.protocol}//${loc.hostname}${loc.hostname === 'localhost' ? ':5000' : ''}
+  let endpoint = process.env.REACT_APP_IS_LOCALHOST === 'true'? (process.env.REACT_APP_API_BASE_URL + ':' + process.env.REACT_APP_API_BASE_URL_PORT + '/api/addlink') : (process.env.REACT_APP_API_BASE_URL_SSL + '/api/addlink');
     return new Promise((resolve, reject) => {
-      fetch(`${loc.protocol}//${loc.hostname}${loc.hostname === 'localhost' ? ':5000' : ''}/api/addlink`, {
+      fetch(endpoint, {
         method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

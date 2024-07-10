@@ -1,7 +1,7 @@
 import { ip } from '@form-validation/validator-ip';
 
 
-const IpValidator = (data:any) => {
+const ipValidator = (data:any) => {
     let linkData = data.toString().split(',');
     let status = true;
 
@@ -34,4 +34,4 @@ const IpValidator = (data:any) => {
     };
 }
 
-export default IpValidator;
+export default ipValidator;

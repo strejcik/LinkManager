@@ -1,10 +1,11 @@
 import Cookies from "js-cookie";
 
-export const DeleteLinkRequest = async(id:string) => {
+export const deleteLinkRequest = async(id:string) => {
     const loc = window.location;
     //${loc.protocol}//${loc.hostname}${loc.hostname === 'localhost' ? ':5000' : ''}
+    let endpoint = process.env.REACT_APP_IS_LOCALHOST === 'true'? (process.env.REACT_APP_API_BASE_URL + ':' + process.env.REACT_APP_API_BASE_URL_PORT + '/api/deletelink') : (process.env.REACT_APP_API_BASE_URL_SSL + '/api/deletelink');
       return new Promise((resolve, reject) => {
-        fetch(`${loc.protocol}//${loc.hostname}${loc.hostname === 'localhost' ? ':5000' : ''}/api/deletelink`, {
+        fetch(endpoint, {
           method: 'POST',
               headers: {
                   'Content-Type': 'application/json',

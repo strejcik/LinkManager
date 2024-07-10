@@ -1,7 +1,5 @@
-import React, {useEffect, useContext } from 'react';
-import { Outlet, useNavigate} from "react-router-dom";
-import AuthContext from '../context/AuthContext.tsx';
-import AuthCheck from '../services/auth/authCheck.tsx';
+import React from 'react';
+import { Outlet} from "react-router-dom";
 const OutletComponent = () => {
     return (
         <Outlet />

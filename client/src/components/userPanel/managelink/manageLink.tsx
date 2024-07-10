@@ -1,18 +1,18 @@
 import React, {useEffect, useState, useCallback, useContext} from "react";
 import './manageLink.css';
-import { GetLinksRequest } from '../../../services/auth/manageLinkService.tsx'
-import ManageLinkItem from './manageLinkItem.tsx';
+import { getLinksRequest } from '../../../services/auth/manageLinkService.tsx'
+import ManageLinkItem from './ManageLinkItem.tsx';
 import { SelectButton } from 'primereact/selectbutton';
-import { DeleteLinkRequest } from "../../../services/auth/deleteLinkService.tsx";
+import { deleteLinkRequest } from "../../../services/auth/deleteLinkService.tsx";
 import { useNavigate} from "react-router-dom";
 
-import AuthContext from '../../../context/AuthContext.tsx';
-import AuthCheck from '../../../services/auth/authCheck.tsx';
+import authContext from '../../../context/authContext.tsx';
+import authCheck from '../../../services/auth/authCheck.tsx';
 
 
 
 const ManageLink = () => {
-    const {auth, setAuth } = useContext(AuthContext);
+    const {auth, setAuth } = useContext(authContext);
     const navigate = useNavigate();
 
 
@@ -43,14 +43,14 @@ const ManageLink = () => {
     }]);
 
     useEffect(() => {
-        AuthCheck(navigate, setAuth);
+        authCheck(navigate, setAuth);
     },[auth]);
 
 
 
     const [filteredLinks, setFilteredLinks] = useState<d[]>([])
     useEffect(() => {
-        GetLinksRequest(setData, setFilteredLinks);
+        getLinksRequest(setData, setFilteredLinks);
     },[]);
 
 
@@ -73,7 +73,6 @@ const ManageLink = () => {
       }
 
       const deleteLink = (id) => {
-        //let filtered = data.filter(e => !e.id.includes(id));
         setFilteredLinks((prev) => prev.filter(e => !e.id.includes(id)));
       }
 
@@ -81,7 +80,7 @@ const ManageLink = () => {
     let handleRemove= useCallback(async(e, id) => {
         e.stopPropagation();
         try {
-            await DeleteLinkRequest(id);
+            await deleteLinkRequest(id);
             deleteLink(id)
         } catch (error) {
             alert(error.message);

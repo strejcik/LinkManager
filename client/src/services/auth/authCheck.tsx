@@ -14,7 +14,7 @@ const isTokenExpired = (token) => {
     }
 };
 
-const AuthCheck = (navigate, setAuth) => {
+const authCheck = (navigate, setAuth) => {
     let token = Cookies.get("token");
           if (isTokenExpired(token)) {
             Cookies.remove("token");
@@ -25,6 +25,6 @@ const AuthCheck = (navigate, setAuth) => {
           }
 }
 
-export default AuthCheck;
+export default authCheck;
 
 

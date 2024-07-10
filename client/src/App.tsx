@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider} from 'react-router-dom';
 
-import LoginUserPage from './pages/loginUserPage/loginUserPage.tsx';
-import RegisterUserPage from './pages/registerUserPage/registerUserPage.tsx';
-import UserPanelPage from './pages/userPanelPage/userPanelPage.tsx';
-import NoMatchPage from './pages/noMatchPage/noMatchPage.tsx';
-import LinkViewsPage from './pages/linkViewsPage/linkViewsPage.tsx';
+import LoginUserPage from './pages/LoginUserPage/LoginUserPage.tsx';
+import RegisterUserPage from './pages/RegisterUserPage/registerUserPage.tsx';
+import UserPanelPage from './pages/UserPanelPage/UserPanelPage.tsx';
+import NoMatchPage from './pages/NoMatchPage/NoMatchPage.tsx';
+import LinkViewsPage from './pages/LinkViewsPage/LinkViewsPage.tsx';
 
 import Root from './components/Root.tsx';
-import AddLink from './components/userPanel/addlink/addlink.tsx';
-import ManageLink from './components/userPanel/managelink/manageLink.tsx'
-import EditLinkItem from './components/userPanel/managelink/editLinkItem/editLinkItem.tsx'
+import AddLink from './components/UserPanel/AddLink/AddLink.tsx';
+import ManageLink from './components/UserPanel/ManageLink/ManageLink.tsx'
+import EditLinkItem from './components/UserPanel/ManageLink/EditLinkItem/EditLinkItem.tsx'
 
-import AuthContext from './context/AuthContext.tsx';
-import AddLinkContext from './context/AddLinkContext.tsx';
+import AuthContext from './context/authContext.tsx';
+import AddLinkContext from './context/addLinkContext.tsx';
 
 const App = () => {
   const [auth, setAuth] = useState(false);

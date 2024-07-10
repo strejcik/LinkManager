@@ -2,10 +2,6 @@ import mongoose from "mongoose";
 
 const viewsSchema = new mongoose.Schema(
   {
-    views: {
-      type: Number,
-      required: true,
-    },
     ip: {
       type: String,
       required: true

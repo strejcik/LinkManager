@@ -55,7 +55,6 @@ app.get('/l/*', async (req,res) => {
               
               Views.create({
                 _id: viewId,
-                views: 1,
                 ip: clientIp,
                 link: link._id,
                 originalLink: link.originalLink,

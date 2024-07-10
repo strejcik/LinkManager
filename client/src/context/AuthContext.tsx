@@ -1,7 +1,7 @@
 import { createContext, SetStateAction, Dispatch } from 'react';
 
 
-interface AuthContextInterface {
+interface authContextInterface {
     auth: boolean;
     setAuth: Dispatch<SetStateAction<boolean>>;
     accountCreated: boolean;
@@ -9,11 +9,11 @@ interface AuthContextInterface {
   }
 
 
-const AuthContext = createContext<AuthContextInterface>({
+const authContext = createContext<authContextInterface>({
     auth: false,
     setAuth: () => { },
     accountCreated: false,
     setAccountCreated: () => { }
 });
 
-export default AuthContext;
+export default authContext;

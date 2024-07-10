@@ -1,6 +1,6 @@
 import React from 'react';
 import './linkViewsPage.css';
-import LinkViews from '../../components/userPanel/linkviews/linkViews.tsx';
+import LinkViews from '../../components/UserPanel/LinkViews/LinkViews.tsx';
 const LinkViewsPage = () => {
     return (
         <>

@@ -1,11 +1,10 @@
 import Cookies from "js-cookie";
 
 
-export const GetViewsRequest = async(setViews) => {
-    const loc = window.location;
-    //${loc.protocol}//${loc.hostname}${loc.hostname === 'localhost' ? ':5000' : ''}/api/getlinks
+export const getViewsRequest = async(setViews) => {
+  let endpoint = process.env.REACT_APP_IS_LOCALHOST === 'true'? (process.env.REACT_APP_API_BASE_URL + ':' + process.env.REACT_APP_API_BASE_URL_PORT + `/api/getlinkviews`) : (process.env.REACT_APP_API_BASE_URL_SSL + `/api/getlinkviews`);
       return new Promise((resolve, reject) => {
-        fetch(`${loc.protocol}//${loc.hostname}${loc.hostname === 'localhost' ? ':5000' : ''}/api/getlinkviews`, {
+        fetch(endpoint, {
           method: 'GET',
               headers: {
                   'Content-Type': 'application/json',
