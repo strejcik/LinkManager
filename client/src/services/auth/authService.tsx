@@ -35,8 +35,6 @@ export const registerUser = async (email, password, setAccountCreated) => {
 
 
 export const loginUser = async (credentials, setAuth) => {
-    const loc = window.location;
-    //`${loc.protocol}//${loc.hostname}${loc.hostname === 'localhost' ? ':5000' : ''}/api/login`
     let endpoint = process.env.REACT_APP_IS_LOCALHOST === 'true'? (process.env.REACT_APP_API_BASE_URL + ':' + process.env.REACT_APP_API_BASE_URL_PORT + '/api/login') : (process.env.REACT_APP_API_BASE_URL_SSL + '/api/login');
     try {
         const response = await fetch(endpoint, {

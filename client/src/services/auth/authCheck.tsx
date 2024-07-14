@@ -16,7 +16,7 @@ const isTokenExpired = (token) => {
 
 const authCheck = (navigate, setAuth) => {
     let token = Cookies.get("token");
-          if (isTokenExpired(token)) {
+          if (isTokenExpired(token) || token === 'undefined') {
             Cookies.remove("token");
             setAuth(false);
             navigate("/login");

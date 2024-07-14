@@ -1,11 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {useParams, useNavigate} from "react-router-dom";
 import { editLinkRequest, getLinkRequest } from '../../../../services/auth/editLinkService.tsx'
 import AuthContext from '../../../../context/authContext.tsx';
 import AuthCheck from '../../../../services/auth/authCheck.tsx';
 import linkValidator from '../../AddLink/linkValidator/linkValidator.tsx';
 import ipValidator from '../../AddLink/ipValidator/ipValidator.tsx';
-import './editLinkItem.css';
+
+
+
+import TextField from '@mui/material/TextField';
+import Box from "@mui/material/Box";
+import Button from '@mui/material/Button';
+import Toolbar from "@mui/material/Toolbar";
+const drawerWidth = 240;
+
+
 
 const EditLinkItem  = () => {
     const { id } = useParams();
@@ -143,42 +152,116 @@ const EditLinkItem  = () => {
             }
         }
     }
+    const navigateToExternalUrl = (url: any, shouldOpenNewTab: boolean = true) =>
+        shouldOpenNewTab ? window.open(url, "_blank") : window.location.href = url;
 
     return (
         <>
-        <div className={'editlinkcontent'}>
-            <div className={'wrapper editlinkwrapper'}>
-                <h3 className={'editsign'}>&#9998;</h3>
-                <div className={'errflexwrapper'}>
-                    {editLinkResponse===true && linkValidatorStatus && ipalidatorStatus && <button disabled className={Clicked && editLinkResponse?'addedlink': 'addedlinkrem'}>Link has been edited &#10003;</button>}
-                    {editLinkResponse===false && !linkValidatorStatus && !ipalidatorStatus && <button disabled className={Clicked && !editLinkResponse?'failaddedlink': 'failaddedlinkrem'}>Incorrect data input ✗</button>}
-                </div>
-                <p className={'originallink'}>Original Link: {data[0].originalLink}</p>
-                <p>Shortened Link: <a className={'shortenedlink'} target="_blank" href={`${window.location.protocol}//${window.location.hostname}${window.location.hostname === 'localhost' ? ':5000' : ''}/l/${data[0].shortenedLink}`}>{`${window.location.protocol}//${window.location.hostname}${window.location.hostname === 'localhost' ? ':5000' : ''}/l/${data[0].shortenedLink}`}</a></p>
-                <p>Category: {data[0].category}</p>
-                <p>Description: {data[0].description}</p>
-                <p>AllowedIP(s): <a className={'allowedips'}>{[data[0].allowedips.length > 1? `${data[0].allowedips},` : `${data[0].allowedips}`]}</a></p>
-                <div className={'flexwrapper'}>
-                    <div className={'input-box'}>
-                        <input type="text" disabled={disabled} className={'centertextinput'} value={inputData.originalLink} name={'originalLink'} onChange={(e) => { e.target.value = e.target.value.replace(/\s/g, '');  dataChange(e)}} placeholder="Original Link"/>
-                    </div>
-                    <div className={'input-box'}>
-                        <input type="text" disabled={disabled} className={'centertextinput'} value={inputData.category} name={'category'} onChange={(e) => { e.target.value = e.target.value.replace(/\s/g, '');  dataChange(e)}} placeholder="Category"/>
-                    </div>
-                    <div className={'input-box'}>
-                        <input type="text" disabled={disabled} className={'centertextinput'} value={inputData.description} name={'description'} onChange={dataChange} placeholder="Description"/>
-                    </div>
-                    <div className={'input-box'}>
-                        <input type="text" disabled={disabled} className={'centertextinput'} value={allowedIp} name={'allowedips'} onChange={(e) => { e.target.value = e.target.value.replace(/\s/g, ''); setChange(e) }} placeholder="AllowedIP(s)"/>
-                    </div>
-                    <div className={'input-box'}>
-                        <button onClick={() => {editData(); handleDisabledInput();}} className={'editdatabutton'}>Edit Data &#9998;</button>
-                    </div>
-                </div>
-               
-                { !disabled && <button onClick={() => { updateState(); Clicking();}}>Confirm Changes &#x2705;</button>}
-            </div>
-        </div>
+       <Box>
+        <Box
+        component="form"
+        noValidate
+        autoComplete="off"
+        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, ml: { sm: `240px`, md: `240px`, lg:`240px`, xl:`240px`}, '& .MuiTextField-root': { mt: 1, mb:1,  width: '25ch' }}}
+        >
+        <Toolbar />
+        <TextField
+          id="outlined-error-helper-text"
+          label="Original Link"
+          style = {{width: `100%`}}
+          disabled={disabled}
+          value = {disabled? data[0].originalLink : inputData.originalLink}
+          unselectable={'off'}
+          sx={{userSelect: `all`}}
+          name={'originalLink'} 
+          onChange={(e) => { e.target.value = e.target.value.replace(/\s/g, '');  dataChange(e)}}
+        />
+        <TextField
+          id="outlined-error-helper-text"
+          label="Shortened Link"
+          style = {{width: `100%`}}
+          disabled
+          value={`${window.location.protocol}//${window.location.hostname}${window.location.hostname === 'localhost' ? ':5000' : ''}/l/${data[0].shortenedLink}`}
+          sx={{userSelect: `all`}}
+          onClick={() => navigateToExternalUrl(`${window.location.protocol}//${window.location.hostname}${window.location.hostname === 'localhost' ? ':5000' : ''}/l/${data[0].shortenedLink}`)}
+        />
+        <TextField
+          id="outlined-error-helper-text"
+          label="Category"
+          style = {{width: `100%`}}
+          disabled={disabled}
+          value={disabled ? data[0].category : inputData.category}
+          sx={{userSelect: `all`}}
+          name={'category'} 
+          onChange={(e) => { e.target.value = e.target.value.replace(/\s/g, '');  dataChange(e)}}
+        />
+        <TextField
+          id="outlined-error-helper-text"
+          label="Description"
+          style = {{width: `100%`}}
+          disabled={disabled}
+          value={disabled ? data[0].description : inputData.description}
+          sx={{userSelect: `all`}}
+          name={'description'} 
+          onChange={dataChange}
+        />
+        <TextField
+          disabled={disabled}
+          id="outlined-error-helper-text"
+          label="AllowedIP(s)"
+          style = {{width: `100%`}}
+          sx={{userSelect: `all`}}
+          value={disabled ? Array.from(data[0].allowedips).toString() : allowedIp}
+          name={'allowedips'} 
+          onChange={(e) => { e.target.value = e.target.value.replace(/\s/g, ''); setChange(e) }}
+        />
+        {disabled && !Clicked &&
+            <Button
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2}}
+            color={'primary'}
+            onClick={() => {editData(); handleDisabledInput();}}
+        >
+            Edit Data &#x270E;
+            </Button>}
+        
+            {!disabled && 
+            <Button
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2}}
+            color={'primary'}
+            onClick={() => { updateState(); Clicking();}}
+        >
+            Confirm Changes &#x2705;
+            </Button>}
+
+            {Clicked && editLinkResponse && linkValidatorStatus && ipalidatorStatus &&
+            <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2}}
+            onClick={Clicking}
+            color={'success'}
+        >
+            Link Editted &#x2705;
+            </Button>}
+
+            {Clicked && (!editLinkResponse || !linkValidatorStatus || !ipalidatorStatus) &&
+            <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2}}
+            onClick={Clicking}
+            color={'error'}
+        >
+            Incorrect data input ✗
+            </Button>}
+      </Box>
+    </Box>
         </>
     )
 }

@@ -5,12 +5,14 @@ import IpValidator from './ipValidator/ipValidator.tsx';
 import { addLinkRequest } from '../../../services/auth/addLinkService.tsx'
 import AuthContext from '../../../context/authContext.tsx';
 import AddLinkContext from '../../../context/addLinkContext.tsx';
-import './addLink.css';
 
 import authCheck from '../../../services/auth/authCheck.tsx';
 
 
-
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 
 const AddLink = () => {
@@ -94,55 +96,139 @@ const AddLink = () => {
 
         
     }
+    const drawerWidth = 240;
 
-    
+
+    const linkValidationErrors = () => {
+        if(link.length === 0 && Clicked && !addLinkResponse) {
+            return {
+                msgType: 'linkIsEmpty',
+                errMsg: "Link(s) can not be empty ✗"
+            };
+        }
+        if(Clicked && !linkValidator(link).status && !addLinkResponse) {
+            return {
+                msgType: 'linkValidation',
+                errMsg: "Link(s) validation failed ✗"
+            };
+        }
+    }
+
+
+    const ipValidationErrors = () => {
+        if(Clicked && !IpValidator(allowedip).status && !addLinkResponse) {
+            return {
+                msgType: 'ipValidation',
+                errMsg: "IP(s) validation failed ✗"
+            };
+        }
+    }
+
+
+    const categoryValidationErrors = () => {
+        if(category.length === 0 && Clicked && !addLinkResponse) {
+            return {
+                msgType: 'categoryIsEmpty',
+                errMsg: "Category can not be empty ✗"
+            };
+        }
+    }
+
+    const descriptionValidationErrors = () => {
+        if(description.length === 0 && Clicked && !addLinkResponse) {
+            return {
+                msgType: 'descriptionIsEmpty',
+                errMsg: "Description can not be empty ✗"
+            };
+        }
+    }
+
+
+
     return (
-        <>
-        <div className="addlinkcontent">
-            <div className="wrapper addlinkwrapper">
-                <form onSubmit={handleSubmit}>
-                    <h3 className={'addsign'}>+</h3>
-                    
-                    <div className={'errflexwrapper'}>
-                        {link.length === 0 && Clicked && !addLinkResponse? <button disabled className={Clicked && link.length === 0? 'failaddedlink errstyle': 'failaddedlinkrem'}>Link(s) can not be empty ✗</button> : <></>}
-                        {Clicked && !linkValidator(link).status && !addLinkResponse && <button disabled className={Clicked ? 'failaddedlink errstyle': 'failaddedlinkrem'}>Link(s) validation failed ✗</button>}
-                        {Clicked && !IpValidator(allowedip).status && !addLinkResponse && <button disabled className={Clicked ? 'failaddedlink errstyle': 'failaddedlinkrem'}>IP(s) validation failed ✗</button>}
-                        {category.length === 0 && Clicked ? !addLinkResponse && <button disabled className={Clicked && category.length === 0? 'failaddedlink errstyle': 'failaddedlinkrem'}>Category can not be empty ✗</button> : <></>}
-                        {description.length === 0 && Clicked ? !addLinkResponse && <button disabled className={Clicked && description.length === 0? 'failaddedlink errstyle': 'failaddedlinkrem'}>Description can not be empty ✗</button> : <></>}
-                   
+        <Box>
+        <Box
+        component="form"
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit}
+        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, ml: { sm: `240px`, md: `240px`, lg:`240px`, xl:`240px`}, '& .MuiTextField-root': { mt: 1, mb:1,  width: '25ch' }}}
+        >
+        <Toolbar />
+        <TextField
+          error={linkValidationErrors()?.msgType==='linkIsEmpty'? true : false || linkValidationErrors()?.msgType==='linkValidation'? true : false}
+          id="outlined-error-helper-text"
+          label="Link(s)"
+          //helperText={}
+          helperText={
+            linkValidationErrors()?.msgType==='linkIsEmpty' && linkValidationErrors()?.errMsg || 
+            linkValidationErrors()?.msgType==='linkValidation' && linkValidationErrors()?.errMsg || 
+            "Enter links separating them with whitespace or comma"}
+          style = {{width: `100%`}}
+          autoFocus
+          required={true}
+          value = {link}
+          onChange={(e) => setLink(e.target.value)}
+        />
+        <TextField
+          error={categoryValidationErrors()?.msgType==='categoryIsEmpty'? true : false}
+          id="outlined-error-helper-text"
+          label="Category"
+          helperText={
+            categoryValidationErrors()?.msgType==='categoryIsEmpty' && categoryValidationErrors()?.errMsg || 
+            "Enter category"}
+          style = {{width: `100%`}}
+          required={true}
+          value = {category}
+          onChange={(e) => setCategory(e.target.value.replace(/\s/g, ''))}
+        />
+        <TextField
+          error={descriptionValidationErrors()?.msgType==='descriptionIsEmpty'? true : false}
+          id="outlined-error-helper-text"
+          label="Description"
+          helperText={
+            descriptionValidationErrors()?.msgType==='descriptionIsEmpty' && descriptionValidationErrors()?.errMsg || 
+            "Enter description"}
+          style = {{width: `100%`}}
+          required={true}
+          value={description} 
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <TextField
+          error={ipValidationErrors()?.msgType==='ipValidation'? true : false}
+          id="outlined-error-helper-text"
+          label="AllowedIP(s)"
+          helperText={ipValidationErrors()?.msgType==='ipValidation'? ipValidationErrors()?.errMsg : "Enter AllowedIP(s) separating them with whitespace or colon. Leave blank if all IP's allowed"}
+          style = {{width: `100%`}}
+          required={true}
+          value={allowedip} onChange={(e) =>{ e.target.value = e.target.value.replace(/\s/g, ''); setAllowedIp(e.target.value)}}
+        />
+        {Clicked && addLinkResponse &&
+            <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2}}
+            onClick={Clicking}
+            color={'success'}
+        >
+            Link Added &#x2705;
+            </Button>}
 
-                        {Clicked && addLinkResponse && <button className={Clicked && addLinkResponse?'addedlink errstyle': 'addedlinkrem'}>Added link &#10003;</button>}
-                    </div>
-                    
-                    
-                    
-                   
 
+        {!addLinkResponse && <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2}}
+                  onClick={Clicking}
+                >
+                  Submit
+        </Button>}
 
-
-                    <div className="input-box">
-                        <input type="string" placeholder="Link(s)" value={link} onChange={(e) => setLink(e.target.value)} required />
-                    </div>
-                    <div className="input-box">
-                        <input type="string" placeholder="Category" value={category} onChange={(e) => setCategory(e.target.value.replace(/\s/g, ''))} required />
-                    </div>
-
-                    <div className="input-box">
-                        <input type="string" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} required />
-                    </div>
-
-                    <div className="input-box">
-                        <input type="string" placeholder="AllowedIP(s), leave blank if all IP(s) are allowed" value={allowedip} onChange={(e) =>{ e.target.value = e.target.value.replace(/\s/g, ''); setAllowedIp(e.target.value)}}/>
-                    </div>
-
-                    
-                    <button type="submit" onClick={Clicking}>Submit &#x2705;</button>
-                    
-                </form>
-            </div>
-        </div>
-        </>
-    );
+      </Box>
+    </Box>
+    )
 };
 
 export default AddLink;

@@ -1,65 +1,160 @@
-import React, { useContext, useEffect, useState } from "react";
+
+import React, { useContext, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import './loginUser.css';
-import AuthContext from "../../context/authContext.tsx";
 import { loginUser } from "../../services/auth/authService.tsx";
+import authContext from "../../context/authContext.tsx";
 
-const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+
+
+
+
+
+
+
+
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+
+
+
+
+
+
+
+
+
+
+const Login= () => {
+    const defaultTheme = createTheme();
+    
+    
     const navigate = useNavigate();
-
-    const { auth, setAuth } = useContext(AuthContext);
-
-
-
-    const handleLogin = async (e) => {
-        e.preventDefault();
-
-        const userData = {
-            email,
-            password,
-        };
-
-        try {
-            //Login user
-            await loginUser(userData, setAuth);
-        } catch (error) {
-            alert(error.message);
-            console.error(error.message || 'An error occurred during sign-in');
-        }
-    };
+    const {  setAccountCreated, accountCreated } = useContext(authContext);
+    const { auth, setAuth } = useContext(authContext);
 
     useEffect(() => {
 
 
         if (auth) {
-            navigate('/panel');
+            navigate('/panel/addlink');
         }
 
     }, [auth, navigate])
+
+    
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+
+
+
+      const userData = {
+        email: data.get('email'),
+        password: data.get('password'),
+    };
+
+    try {
+        //Login user
+        await loginUser(userData, setAuth);
+    } catch (error) {
+        alert(error.message);
+        console.error(error.message || 'An error occurred during sign-in');
+    }
+    };
+  
     return (
-        <div className="wrapper">
-            <form onSubmit={handleLogin}>
-                <h1>Login</h1>
-                <div className="input-box">
-                    <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                    {/* <MdEmail className="icon" /> */}
-                </div>
-                <div className="input-box">
-                    <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                    {/* <FaLock className="icon" /> */}
-                </div>
-
-
-                <button type="submit">Login</button>
-
-                <div className="register-link">
-                    <p>Don't have an account? <a onClick={() => navigate("/register")}>Register</a></p>
-                </div>
-            </form>
-        </div>
+      <ThemeProvider theme={defaultTheme}>
+        <Grid container component="main" sx={{ height: '100vh' }}>
+          <CssBaseline />
+          <Grid
+            item
+            xs={false}
+            sm={4}
+            md={7}
+            sx={{
+              backgroundImage:
+                'url("https://images.pexels.com/photos/3297593/pexels-photo-3297593.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")',
+  
+              backgroundColor: (t) =>
+                t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+              backgroundSize: 'cover',
+              backgroundPosition: 'left',
+            }}
+          />
+          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+            <Box
+              sx={{
+                my: 8,
+                mx: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                <LockOutlinedIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Sign in
+              </Typography>
+              <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+                <FormControlLabel
+                  control={<Checkbox value="remember" color="primary" />}
+                  label="Remember me"
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Sign In
+                </Button>
+                <Grid container>
+                  <Grid item>
+                    <Link variant="body2" onClick={() => { setAccountCreated(false); navigate("/register"); }}>
+                      {"Don't have an account? Sign Up"}
+                    </Link>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+      </ThemeProvider>
     );
-};
+  }
 
 export default Login;

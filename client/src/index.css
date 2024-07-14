@@ -1,8 +1,12 @@
 body {
-  margin: 0;
-  background-color: dodgerblue;
+  /* margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: url(./assets/pattern.svg);
-  height: 100vh; 
+  background-image: url("https://images.pexels.com/photos/3297593/pexels-photo-3297593.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100vh;  */
 }
+input[disabled] {pointer-events:none}

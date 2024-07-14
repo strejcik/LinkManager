@@ -1,11 +1,16 @@
 import React, {useEffect, useState, useContext} from 'react';
 import { useNavigate } from "react-router-dom";
-import './linkViews.css';
 import { Chart } from "react-google-charts";
 import { getViewsRequest } from '../../../services/auth/viewsLinkService.tsx'
 import authContext from '../../../context/authContext.tsx';
 import authCheck from '../../../services/auth/authCheck.tsx';
-                                        
+
+
+
+
+import Box from '@mui/material/Box';                         
+
+const drawerWidth = 240;
 
 
 const LinkViews = () => {
@@ -70,20 +75,22 @@ const LinkViews = () => {
       }
 
     let options = {
-        colors: ["#7ddc1f"]
+        colors: ["#f1802d"]
     }
     return (
         <>
-            <div className="linkviewscontent">
-            <div className="wrapper linkviewswrapper">
-                <h1>&#128065;</h1>
-                 { views && <Chart
+            <Box sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, ml: { sm: `240px`, md: `240px`, lg:`240px`, xl:`240px`}, '& .MuiTextField-root': { mt: 1, mb:1,  width: '25ch' }}}>
+            
+            
+            
+            <Box sx={{mt:`calc(50vh - 100px)`, border: `1px solid lightgray`}}>
+            { views && <Chart
                                 chartType="Histogram"
                                 data={prepareData()}
                                 options={options}
                             />  } 
-            </div>
-            </div>
+            </Box>
+            </Box>
         </>
     );
 };
