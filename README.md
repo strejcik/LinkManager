@@ -1,4 +1,4 @@
-<div style="text-align:center"><img src="https://i.imgur.com/QpGaTrF.png"/></div>
+<div style="text-align:center"><img src="https://i.imgur.com/2Bhf4cb.gif"/></div>
 
 # 🔗Link Manager
 
