@@ -30,6 +30,9 @@ const ManageLink = () => {
     const {auth, setAuth } = useContext(authContext);
     const location = useLocation();
     const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        search: "",
+      });
 
     const [link, setLink] = useState();
     
@@ -61,9 +64,14 @@ const ManageLink = () => {
     useEffect(() => {
         getLinksRequest(setData, setFilteredLinks);
     },[]);
-
+    const handleChange = (event) => {
+        event.preventDefault();
+        const { name, value } = event.target;
+        setFormData((prevState) => ({ ...prevState, [name]: value }));
+      };
 
       const handleFilter = (e) => {
+        e.preventDefault();
         const value = e.target.value;
         let filtered;
         filtered = data.filter(function(o) {
@@ -71,7 +79,6 @@ const ManageLink = () => {
               return o[k].toString().indexOf(value) != -1;
             })
           })
-        
         setFilteredLinks(filtered);
       }
 
@@ -119,18 +126,21 @@ const ManageLink = () => {
 
       const drawerWidth = 240;
     return (
-        <React.Fragment key={Math.random()}>
+        <React.Fragment>
 
 
-                <Box sx={{ p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, ml: { sm: `240px`, md: `240px`, lg:`240px`, xl:`240px`}, '& .MuiTextField-root': { mb:1,  width: '25ch' }}}  key={Math.random()}>
-                    <Box  key={Math.random()}>
-                        <TextField label="Search 🔍" style = {{width: `100%`}} onChange={e => { handleFilter(e)} } sx={{ marginTop: 8}}  key={Math.random()}/>
+                <Box  component="form"
+                    noValidate
+                    autoComplete="off" 
+                    sx={{ p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, ml: { sm: `240px`, md: `240px`, lg:`240px`, xl:`240px`}, '& .MuiTextField-root': { mb:1,  width: '25ch' }}}>
+                    <Box>
+                        <TextField label="Search 🔍" name={'search'} style = {{width: `100%`}} onChange={e => { handleFilter(e); handleChange(e)} } sx={{ marginTop: 8}} value={formData.search}/>
                     </Box>
                 </Box>
-                <TableContainer component={Paper} key={Math.random()}>
-                <Table sx={{ ml: { sm: `240px`, md: `240px`, lg:`240px`, xl:`240px`}, width: { sm: `calc(100% - ${drawerWidth}px)` }}} key={Math.random()}>
-                    <TableHead key={Math.random()}>
-                    <TableRow key={Math.random()}>
+                <TableContainer component={Paper}>
+                <Table sx={{ ml: { sm: `240px`, md: `240px`, lg:`240px`, xl:`240px`}, width: { sm: `calc(100% - ${drawerWidth}px)` }}}>
+                    <TableHead>
+                    <TableRow>
                         <TableCell key={Math.random()}>Original Link</TableCell>
                         <TableCell key={Math.random()}>Category</TableCell>
                         <TableCell key={Math.random()}>Description</TableCell>
@@ -139,7 +149,7 @@ const ManageLink = () => {
                         <TableCell sx={{textAlign:'center'}} key={Math.random()}>Edit</TableCell>
                     </TableRow>
                     </TableHead>
-                    <TableBody  key={Math.random()}>
+                    <TableBody>
                     {filteredLinks.map((row, i) => (
                         <React.Fragment key={Math.random()}>
 
@@ -151,10 +161,9 @@ const ManageLink = () => {
                             keepMounted
                             onClose={handleClose}
                             aria-describedby={row.originalLink}
-                            key={Math.random()}
                         >
-                            <DialogContent  key={Math.random()}>
-                            <DialogContentText key={Math.random()}>
+                            <DialogContent>
+                            <DialogContentText>
                                 {link}
                             </DialogContentText>
                             </DialogContent>
