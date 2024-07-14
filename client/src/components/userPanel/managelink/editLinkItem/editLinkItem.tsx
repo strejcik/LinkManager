@@ -170,7 +170,7 @@ const EditLinkItem  = () => {
           label="Original Link"
           style = {{width: `100%`}}
           disabled={disabled}
-          value = {disabled? data[0].originalLink : inputData.originalLink}
+          value = {disabled? data[0]?.originalLink : inputData.originalLink}
           unselectable={'off'}
           sx={{userSelect: `all`}}
           name={'originalLink'} 
