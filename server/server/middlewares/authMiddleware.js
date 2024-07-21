@@ -27,6 +27,10 @@ const authenticateJWT = (req, res, next) => {
     next();
   });
 };
+
+
+
+
 const authenticateJWTGet = (req, res, next) => {
   let t = getToken(req);
   let {token} = JSON.parse(t);

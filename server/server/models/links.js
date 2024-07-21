@@ -22,10 +22,8 @@ const linkSchema = new mongoose.Schema(
       type: Array,
       required: true
     },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-  },
-  {
-    timestamps: true,
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    createdAt: {type: Date, default: new Date().getTime()},
   }
 );
 

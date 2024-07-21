@@ -5,7 +5,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import authContext from '../../../context/authContext.tsx';
 import authCheck from '../../../services/auth/authCheck.tsx';
-
+import cacheContext from "../../../context/cacheContext.tsx";
+import lsContext from '../../../context/lsStorageContext.tsx';
 
 
 import TextField from '@mui/material/TextField';
@@ -28,6 +29,8 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const ManageLink = () => {
     const {auth, setAuth } = useContext(authContext);
+    const { cache, setCache, setViewsCache} = useContext(cacheContext);
+    const {ls, setLs } = useContext(lsContext);
     const location = useLocation();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -45,15 +48,6 @@ const ManageLink = () => {
         allowedips: Array<string>
       }
 
-    const [data, setData] = useState<[d]>([{
-        id: '',
-        originalLink: '',
-        shortenedLink: '',
-        category: '',
-        description: '',
-        allowedips: [],
-    }]);
-
     useEffect(() => {
         authCheck(navigate, setAuth);
     },[auth]);
@@ -62,8 +56,10 @@ const ManageLink = () => {
 
     const [filteredLinks, setFilteredLinks] = useState<d[]>([])
     useEffect(() => {
-        getLinksRequest(setData, setFilteredLinks);
-    },[]);
+        cache && getLinksRequest(setFilteredLinks, setCache, setLs, ls);
+        !cache && ls[0] !== undefined && setFilteredLinks(ls);
+    },[cache]);
+    
     const handleChange = (event) => {
         event.preventDefault();
         const { name, value } = event.target;
@@ -74,27 +70,38 @@ const ManageLink = () => {
         e.preventDefault();
         const value = e.target.value;
         let filtered;
-        filtered = data.filter(function(o) {
+        filtered = ls.filter(function(o) {
             return Object.keys(o).some(function(k) {
               return o[k].toString().indexOf(value) != -1;
             })
           })
-        setFilteredLinks(filtered);
+          setFilteredLinks(filtered);
+        
+      }
+      const setFilteredLinksDeleteItem = (id) => {
+        return new Promise((resolve, reject) => {
+            resolve(setFilteredLinks((prev) => prev.filter(e => !e.id.includes(id))));
+        });
       }
 
-      const deleteLink = (id) => {
-        setFilteredLinks((prev) => prev.filter(e => !e.id.includes(id)));
+      const setLsDeleteItem = (id) => {
+        return new Promise((resolve, reject) => {
+            resolve(setLs((prev) => prev.filter(e => !e.id.includes(id))));
+        });
+      }
+
+      const deleteLink = async (id) => {
+       return await Promise.all([setFilteredLinksDeleteItem(id), setLsDeleteItem(id)]).then((res) => {
+       }).catch( error => window.location.reload());
       }
 
       
     let handleRemove= useCallback(async(e, id) => {
         e.stopPropagation();
         try {
-            await deleteLinkRequest(id);
-            deleteLink(id)
+            await deleteLinkRequest(id,deleteLink, setViewsCache);
         } catch (error) {
-            alert(error.message);
-            console.error(error.message || 'An error occurred during sign-in');
+            console.error(error.message);
         }
 
       }, [filteredLinks]);
@@ -150,7 +157,7 @@ const ManageLink = () => {
                     </TableRow>
                     </TableHead>
                     <TableBody>
-                    {filteredLinks.map((row, i) => (
+                    {filteredLinks?.map((row, i) => (
                         <React.Fragment key={Math.random()}>
 
                         
@@ -160,14 +167,14 @@ const ManageLink = () => {
                             open={open}
                             keepMounted
                             onClose={handleClose}
-                            aria-describedby={row.originalLink}
+                            aria-describedby={row?.originalLink}
                         >
                             <DialogContent>
                             <DialogContentText>
                                 {link}
                             </DialogContentText>
                             </DialogContent>
-                            <DialogActions key={i+29382}>
+                            <DialogActions key={Math.random()}>
                             <Button onClick={handleClose}  key={Math.random()}>Close</Button>
                             </DialogActions>
                         </Dialog>
@@ -178,7 +185,7 @@ const ManageLink = () => {
                         <TableRow key={Math.random()}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
                         >
-                        <TableCell onClick={(e) => handleClickOpen(e, row.originalLink)} key={Math.random()}>
+                        <TableCell onClick={(e) => handleClickOpen(e, row?.originalLink)} key={Math.random()}>
                         <Typography key={Math.random()}
                         sx={{
                             overflow: 'hidden',
@@ -191,7 +198,7 @@ const ManageLink = () => {
                            {row.originalLink}
                         </Typography>
                         </TableCell>
-                        <TableCell onClick={(e) => handleClickOpen(e, row.category)} key={Math.random()}>
+                        <TableCell onClick={(e) => handleClickOpen(e, row?.category)} key={Math.random()}>
                         <Typography key={Math.random()}
                         sx={{
                             overflow: 'hidden',
@@ -204,7 +211,7 @@ const ManageLink = () => {
                            {row.category}
                         </Typography>
                         </TableCell>
-                        <TableCell onClick={(e) => handleClickOpen(e, row.description)} key={Math.random()}>
+                        <TableCell onClick={(e) => handleClickOpen(e, row?.description)} key={Math.random()}>
                         <Typography key={Math.random()}
                         sx={{
                             overflow: 'hidden',
@@ -217,7 +224,7 @@ const ManageLink = () => {
                            {row.description}
                         </Typography>
                         </TableCell>
-                        <TableCell onClick={(e) => handleClickOpen(e, row.allowedips)} key={Math.random()}>
+                        <TableCell onClick={(e) => handleClickOpen(e, row?.allowedips)} key={Math.random()}>
                         <Typography key={Math.random()}
                         sx={{
                             overflow: 'hidden',
@@ -227,14 +234,14 @@ const ManageLink = () => {
                             width: '10rem',
                         }}
                         >
-                           {Array.from(row.allowedips).toString()}
+                           {Array.from(row?.allowedips).toString()}
                         </Typography>
                         </TableCell>
                         <TableCell key={Math.random()}>
-                            <Button sx={{ width: `100%`, mt: 1, textAlign:'center'}} onClick={(e) => handleRemove(e, row.id)} key={Math.random()}><DeleteIcon/></Button>
+                            <Button sx={{ width: `100%`, mt: 1, textAlign:'center'}} onClick={(e) => handleRemove(e, row?.id)} key={Math.random()}><DeleteIcon/></Button>
                         </TableCell>
-                        <TableCell key={i+`shrfgzxc`}>
-                            <Button sx={{ width: `100%`, mt: 1, textAlign:'center'}} onClick={(e) => handleClick(row.id)} key={Math.random()}><EditIcon/></Button>
+                        <TableCell key={Math.random()}>
+                            <Button sx={{ width: `100%`, mt: 1, textAlign:'center'}} onClick={(e) => handleClick(row?.id)} key={Math.random()}><EditIcon/></Button>
                         </TableCell>
                         </TableRow>
                         </React.Fragment>

@@ -5,6 +5,7 @@ import IpValidator from './ipValidator/ipValidator.tsx';
 import { addLinkRequest } from '../../../services/auth/addLinkService.tsx'
 import AuthContext from '../../../context/authContext.tsx';
 import AddLinkContext from '../../../context/addLinkContext.tsx';
+import cacheContext from "../../../context/cacheContext.tsx";
 
 import authCheck from '../../../services/auth/authCheck.tsx';
 
@@ -42,6 +43,7 @@ const AddLink = () => {
     const [Clicked,setState] = useState<boolean>(false);
     const {auth, setAuth } = useContext(AuthContext);
     const { setAddLinkResponse, addLinkResponse } = useContext(AddLinkContext);
+    const { setCache, setViewsCache} = useContext(cacheContext);
     const navigate = useNavigate();
 
 
@@ -84,11 +86,10 @@ const AddLink = () => {
 
         if(!isEmpty(userData)) {
             try {
-                await addLinkRequest(userData, setAddLinkResponse);
+                await addLinkRequest(userData, setAddLinkResponse, setCache, setViewsCache);
                 setLink(''); setCategory(''); setDescription(''); setAllowedIp('');
             } catch (error) {
                 console.error(error.message || 'An error occurred during adding link(s)');
-                console.log(error);
             }
         }
 

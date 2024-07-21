@@ -12,11 +12,9 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     links: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Link' }],
-    views: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Views' }]
+    views: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Views' }],
+    createdAt: {type: Date, default: new Date().getTime()},
   },
-  {
-    timestamps: true,
-  }
 );
 
 export default mongoose.model("User", userSchema);

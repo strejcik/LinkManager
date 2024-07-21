@@ -14,10 +14,8 @@ const viewsSchema = new mongoose.Schema(
     shortenedLink: {
       type: String,
       required: true
-    }
-  },
-  {
-    timestamps: true,
+    },
+    createdAt: {type: Date, default: new Date().getTime()},
   }
 );
 

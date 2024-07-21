@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider} from 'react-router-dom';
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 import LoginUserPage from './pages/LoginUserPage/LoginUserPage.tsx';
 import RegisterUserPage from './pages/RegisterUserPage/registerUserPage.tsx';
@@ -14,12 +15,25 @@ import EditLinkItem from './components/UserPanel/ManageLink/EditLinkItem/EditLin
 
 import AuthContext from './context/authContext.tsx';
 import AddLinkContext from './context/addLinkContext.tsx';
+import cacheContext from './context/cacheContext.tsx';
+import lsContext from './context/lsStorageContext.tsx';
+
+import { useBeforeunload } from 'react-beforeunload';
+
+
+
 
 const App = () => {
   const [auth, setAuth] = useState(false);
   const [accountCreated, setAccountCreated] = useState(false);
   const [addLinkResponse, setAddLinkResponse] = useState(false);
-
+  const [cache, setCache] = useState(true);
+  const [viewsCache, setViewsCache] = useState(true);
+  const [ls, setLs] = useLocalStorage<any>("data", []);
+  const [viewsLs, setViewsLs] = useLocalStorage<any>("views", []);
+  useBeforeunload(() => {
+    if (window) localStorage.clear();
+      });
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -40,7 +54,11 @@ const App = () => {
   return (
     <AuthContext.Provider value={{ auth, setAuth, setAccountCreated, accountCreated}}>
       <AddLinkContext.Provider value={{addLinkResponse, setAddLinkResponse}}>
-        <RouterProvider router={router} />
+        <cacheContext.Provider value={{cache, setCache, viewsCache, setViewsCache}}>
+          <lsContext.Provider value={{ls, setLs, viewsLs, setViewsLs}}>
+            <RouterProvider router={router} />
+          </lsContext.Provider>
+        </cacheContext.Provider>
       </AddLinkContext.Provider>
     </AuthContext.Provider>
 

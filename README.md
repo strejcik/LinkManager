@@ -6,6 +6,7 @@ Link Manager is React-Node application that shortens link and redirect user to s
 
 # 📺Demo
 [Watch Me](https://youtu.be/vcKkCst-iHQ)
+[Deployed LinkManager](https://lnkmngr.com/login)
 
 ## 👇Features
 
@@ -15,6 +16,8 @@ Link Manager is React-Node application that shortens link and redirect user to s
 - Adding category
 - Adding AllowedIP(s) for displaying specific link
 - Filtering current link(s) by: Link, Category, Description, AllowedIP(s)
+- Caching data on client side for improving speed of application
+- Clustering for improving speed of application
 
 ## 💡Tech
 ![image](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)

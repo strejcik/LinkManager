@@ -5,8 +5,8 @@ import AuthContext from '../../../../context/authContext.tsx';
 import AuthCheck from '../../../../services/auth/authCheck.tsx';
 import linkValidator from '../../AddLink/linkValidator/linkValidator.tsx';
 import ipValidator from '../../AddLink/ipValidator/ipValidator.tsx';
-
-
+import lsContext from '../../../../context/lsStorageContext.tsx';
+import cacheContext from "../../../../context/cacheContext.tsx";
 
 import TextField from '@mui/material/TextField';
 import Box from "@mui/material/Box";
@@ -19,7 +19,10 @@ const drawerWidth = 240;
 const EditLinkItem  = () => {
     const { id } = useParams();
     const {auth, setAuth } = useContext(AuthContext);
+    const { ls, setLs } = useContext(lsContext);
+    const {setViewsCache} = useContext(cacheContext);
     const navigate = useNavigate();
+
 
     const isEmpty = (value:object) => {
         return (value == null || Object.keys(value).length === 0);
@@ -28,10 +31,10 @@ const EditLinkItem  = () => {
 
 
     const [data, setData] = useState<[d]>([{
-        originalLink: '',
-        shortenedLink: '',
-        category: '',
-        description: '',
+        originalLink: "",
+        shortenedLink: "",
+        category: "",
+        description: "",
         allowedips: [],
     }]);
 
@@ -57,7 +60,7 @@ const EditLinkItem  = () => {
     const [ipalidatorStatus, setIpValidatorStatus] = useState<boolean>(false);
     const [editLinkResponse, setEditLinkResponse] = useState<boolean>(false);
     const [Clicked,setState] = useState<boolean>(false);
-    const [inputData, setInputData] = useState({originalLink: data[0].originalLink, category: data[0].category, description: data[0].description, allowedips: data[0].allowedips})
+    const [inputData, setInputData] = useState({originalLink: data[0]?.originalLink, category: data[0]?.category, description: data[0]?.description, allowedips: data[0]?.allowedips})
     const [allowedIp, setAllowedIp]: any= useState<string>("");
     interface d {
         originalLink: string,
@@ -74,7 +77,7 @@ const EditLinkItem  = () => {
 
     useEffect(() => {
         getLinkRequest(id, setData);
-    },[Clicked]);
+    },[]);
 
     useEffect(() => {
         if (Clicked) setTimeout(() => {setState(false); setEditLinkResponse(false);}, 3000)
@@ -92,8 +95,8 @@ const EditLinkItem  = () => {
     }
 
     const editData = () => {
-        setInputData(prevdata => ({...prevdata, originalLink: data[0].originalLink, category: data[0].category, description: data[0].description}))
-        setAllowedIp(([ ...data[0].allowedips]))
+        setInputData(prevdata => ({...prevdata, originalLink: data[0]?.originalLink, category: data[0]?.category, description: data[0]?.description}))
+        setAllowedIp(([ ...data[0]?.allowedips]))
         
         !disabled && setInputData(prevdata => ({...prevdata, originalLink: '', category: '', description: ''}));
         !disabled &&setAllowedIp("");
@@ -102,7 +105,7 @@ const EditLinkItem  = () => {
     const updateState = async() => {
 
         let allowAllIp = {status:true, data:[]};
-        let linkData = linkValidator(data[0].originalLink);
+        let linkData = linkValidator(data[0]?.originalLink);
         let ipData = allowedIp.length === 0? allowAllIp : ipValidator(allowedIp);
 
 
@@ -146,9 +149,9 @@ const EditLinkItem  = () => {
 
         if(!isEmpty(userData)) {
             try {
-                await editLinkRequest(id, userData, setEditLinkResponse);
+                await editLinkRequest(id, userData, setEditLinkResponse, ls, setLs, setViewsCache);
             } catch (error) {
-                console.error(error.message || 'An error occurred during adding link(s)');
+                console.error(error.message || 'An error occurred during editting link(s)');
             }
         }
     }
@@ -170,7 +173,7 @@ const EditLinkItem  = () => {
           label="Original Link"
           style = {{width: `100%`}}
           disabled={disabled}
-          value = {disabled? data[0]?.originalLink : inputData.originalLink}
+          value = {disabled? (data[0]?.originalLink.length === 0? "" : data[0]?.originalLink) : inputData.originalLink}
           unselectable={'off'}
           sx={{userSelect: `all`}}
           name={'originalLink'} 
@@ -181,16 +184,16 @@ const EditLinkItem  = () => {
           label="Shortened Link"
           style = {{width: `100%`}}
           disabled
-          value={`${window.location.protocol}//${window.location.hostname}${window.location.hostname === 'localhost' ? ':5000' : ''}/l/${data[0].shortenedLink}`}
+          value={`${window.location.protocol}//${window.location.hostname}${window.location.hostname === 'localhost' ? ':5000' : ''}/l/${data[0]?.shortenedLink}`}
           sx={{userSelect: `all`}}
-          onClick={() => navigateToExternalUrl(`${window.location.protocol}//${window.location.hostname}${window.location.hostname === 'localhost' ? ':5000' : ''}/l/${data[0].shortenedLink}`)}
+          onClick={() => {setViewsCache(true);navigateToExternalUrl(`${window.location.protocol}//${window.location.hostname}${window.location.hostname === 'localhost' ? ':5000' : ''}/l/${data[0]?.shortenedLink}`)}}
         />
         <TextField
           id="outlined-error-helper-text"
           label="Category"
           style = {{width: `100%`}}
           disabled={disabled}
-          value={disabled ? data[0].category : inputData.category}
+          value={disabled ? data[0]?.category : inputData.category}
           sx={{userSelect: `all`}}
           name={'category'} 
           onChange={(e) => { e.target.value = e.target.value.replace(/\s/g, '');  dataChange(e)}}
@@ -200,7 +203,7 @@ const EditLinkItem  = () => {
           label="Description"
           style = {{width: `100%`}}
           disabled={disabled}
-          value={disabled ? data[0].description : inputData.description}
+          value={disabled ? data[0]?.description : inputData.description}
           sx={{userSelect: `all`}}
           name={'description'} 
           onChange={dataChange}
@@ -211,7 +214,7 @@ const EditLinkItem  = () => {
           label="AllowedIP(s)"
           style = {{width: `100%`}}
           sx={{userSelect: `all`}}
-          value={disabled ? Array.from(data[0].allowedips).toString() : allowedIp}
+          value={disabled ? data[0]?.allowedips.toString() : allowedIp}
           name={'allowedips'} 
           onChange={(e) => { e.target.value = e.target.value.replace(/\s/g, ''); setChange(e) }}
         />

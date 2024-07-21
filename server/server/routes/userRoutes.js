@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/users.js';
 import Link from '../models/links.js';
 import Views from '../models/views.js';
-import { authenticateJWT, authenticateJWTGet } from '../middlewares/authMiddleware.js';
+import { authenticateJWT, authenticateJWTGet} from '../middlewares/authMiddleware.js';
 import { nanoid } from 'nanoid';
 import { registerValidation, handleRegisterValidationErrors } from '../middlewares/registerMiddleware.js';
 import { loginValidation, handleLoginValidationErrors } from '../middlewares/loginMiddleware.js';
@@ -13,14 +13,14 @@ import { editLinkValidation, handleEditLinkValidationErrors } from '../middlewar
 import formatLink from '../utils/formatLink.js';
 const router = express.Router();
 
-
 // User Registration
 
 router.post('/register',registerValidation, handleRegisterValidationErrors, async (req, res) => {
+  
   try {
     const { email, password } = req.body;
 
-    const existingUser = await User.findOne({ email }); // Changed variable name to existingUser
+    const existingUser = await User.findOne({ email }).lean(); // Changed variable name to existingUser
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
@@ -30,25 +30,26 @@ router.post('/register',registerValidation, handleRegisterValidationErrors, asyn
 
     const newUser = new User({ email, password: hashedPassword });
     await newUser.save();
-
-    res.json({ message: 'User registered successfully' });
+    return res.json({ message: 'User registered successfully' });
   } catch (error) {
     console.error(error);
-    res.json({ message: 'Internal server error' });
+    return res.json({ message: 'Internal server error' });
   }
 });
 
 // User Login
 
 router.post('/login', loginValidation, handleLoginValidationErrors, async (req, res) => {
+  
   try {
     const { email, password } = req.body;
 
     // Check if user exists
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email }).lean();
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
+
 
     // Compare passwords
     const passwordMatch = await bcrypt.compare(password, user.password);
@@ -60,11 +61,10 @@ router.post('/login', loginValidation, handleLoginValidationErrors, async (req, 
     const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
-
-    res.json({ token, email });
+    return res.json({ token, email });
   } catch (error) {
     console.error(error);
-    res.json({ message: 'Internal server error' });
+    return res.json({ message: 'Internal server error' });
   }
 });
 
@@ -76,6 +76,7 @@ router.post('/login', loginValidation, handleLoginValidationErrors, async (req, 
 
 router.post('/addlink', [authenticateJWT, addLinkValidation], handleAddLinkValidationErrors ,  async (req, res) => {
   const { data } = req.body;
+  
   const dataObj = data.links.reduce((acc,curr)=> (acc[curr]='',acc),{});
   try {
     User.findOne({ email: req.user.email }).then(async (user, err) => {
@@ -102,7 +103,7 @@ router.post('/addlink', [authenticateJWT, addLinkValidation], handleAddLinkValid
   });
   }catch (error) {
     console.error(error);
-    res.json({ message: 'Internal server error' });
+    return res.json({ message: 'Internal server error' });
   }
 });
 
@@ -112,7 +113,7 @@ router.post('/addlink', [authenticateJWT, addLinkValidation], handleAddLinkValid
 router.post('/editlink', [authenticateJWT, editLinkValidation], handleEditLinkValidationErrors, (req, res) => {
   const { user, data, id } = req.body;
   data.originalLink = formatLink(data.originalLink);
-
+  
 
   Link.findOneAndUpdate(
     { _id: id },
@@ -121,11 +122,12 @@ router.post('/editlink', [authenticateJWT, editLinkValidation], handleEditLinkVa
     (err, doc) => {
       if (err) {
         console.error(err);
-        return;
+        
       }
+      
       return res.status(200).json({ message: 'Editted link' });
     }
-  );
+  ).lean();
 
 
 });
@@ -137,7 +139,10 @@ router.post('/deletelink', [authenticateJWT], (req, res) => {
   const { data } = req.body;
   const user = req.user;
   var shortLink;
-  Link.findOne({_id: data }).then(linkdoc => {
+  
+
+
+  Link.findOne({_id: data }).lean().then(linkdoc => {
     shortLink = linkdoc.shortenedLink;
 
     Link.findOneAndRemove({_id: data }, 
@@ -171,10 +176,10 @@ router.post('/deletelink', [authenticateJWT], (req, res) => {
             function (err, docs) { 
             if (err){ 
               console.error(err);
-              return res.json({ message: 'Could not remove link' });
-            } 
+              return res.json({ message: 'Could not remove views' });
+            }
             });
-            return res.status(200).json({ message: 'Removed link' });
+            return res.status(200).json({ message: 'Removed views and link' });
           
         }
       });
@@ -185,7 +190,7 @@ router.post('/deletelink', [authenticateJWT], (req, res) => {
 
   }).catch(error => {
     return res.status(500).json(error);
-});;
+});
 });
 
 
@@ -202,10 +207,14 @@ router.get('/getlinks', authenticateJWTGet,  async (req, res) => {
       path:"links",
       model:"Link"
     })
+    .lean()
     .exec(function (err, data) {
+      if(err) {
+        
+      }
       let responseData = [];
       let linkObj;
-      data.links.forEach((e, i) => {
+      data?.links.forEach((e, i) => {
           linkObj = {
             id: e._id.toString(),
             originalLink: e.originalLink,
@@ -221,7 +230,7 @@ router.get('/getlinks', authenticateJWTGet,  async (req, res) => {
 
   }catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
@@ -236,6 +245,9 @@ router.get('/getlinks', authenticateJWTGet,  async (req, res) => {
 router.get('/getlink/:id', authenticateJWTGet,  async (req, res) => {
   let user = req.user.email;
   let id = req.params.id;
+
+
+
   try {
 
     await User.findOne({email: user})
@@ -243,10 +255,14 @@ router.get('/getlink/:id', authenticateJWTGet,  async (req, res) => {
       path:"links",
       model:"Link"
     })
+    .lean()
     .exec(function (err, data) {
+      if(err) {
+        
+      }
       let responseData = [];
       let linkObj;
-      data.links.forEach((e, i) => {
+      data?.links.forEach((e, i) => {
         if(e._id.toString() === id) {
           linkObj = {
             id: e._id.toString(),
@@ -259,13 +275,12 @@ router.get('/getlink/:id', authenticateJWTGet,  async (req, res) => {
           responseData.push(linkObj);
         }
       });
-      //res.status(500).json({ message: 'Link not found.' });
       return res.status(200).json(responseData);
     });
 
   }catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
@@ -291,21 +306,43 @@ router.get('/getlinkviews', authenticateJWTGet, async (req, res) => {
       path:"views",
       model:"Views"
     })
+    .lean()
     .exec(function (err, data) {
+      if(err) {
+        
+      }
       let responseData = [];
-      data.views.forEach(e => {
+      data?.views.forEach(e => {
         responseData.push({originalLink: e.originalLink, shortenedLink: e.shortenedLink});
       })  
-      return res.status(200).json(data.views);
+      return res.status(200).json(responseData);
     });
   }catch(err) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 
 
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

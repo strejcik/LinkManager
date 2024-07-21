@@ -1,6 +1,5 @@
 import Cookies from "js-cookie";
 
-
 export const registerUser = async (email, password, setAccountCreated) => {
     let endpoint = process.env.REACT_APP_IS_LOCALHOST === 'true'? (process.env.REACT_APP_API_BASE_URL + ':' + process.env.REACT_APP_API_BASE_URL_PORT + '/api/register') : (process.env.REACT_APP_API_BASE_URL_SSL + '/api/register');
     try {
@@ -56,10 +55,8 @@ export const loginUser = async (credentials, setAuth) => {
 
         setAuth(true);
 
-
-        // Store static values in Cookies
-        Cookies.set('token', token, { expires: 5 });
-        Cookies.set("email", data.email, { expires: 5 })
+        
+        Cookies.set('token', token);
         
 
     } catch (error) {
