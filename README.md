@@ -20,6 +20,14 @@ Link Manager is React-Node application that shortens link and redirect user to s
 - Caching data on client side for improving speed of application
 - Clustering for improving speed of application
 
+## &#127775; Value
+
+1. Improved aesthetics and readability: Shortened URLs are cleaner, more concise, and easier to share, especially in contexts like social media posts, emails, or presentations. They avoid long, cumbersome links that can look cluttered or unprofessional.
+2. Enhanced user experience: Short URLs are more user-friendly, reducing the likelihood of broken links due to copy-pasting errors or truncation in text fields. This ensures a smoother experience when sharing links across platforms.
+3. Efficient space usage: In platforms with character limits. Shortened URLs save valuable space, allowing users to share longer messages without sacrificing important content for a lengthy link.
+4. Provide analytics feature: Allowing users to track clicks. This insight is valuable for measuring the effectiveness of campaigns and optimizing future content.
+5. Ability to replace link content: Wherever you need to replace source link, you change once (at one place).
+
 ## 💡Tech
 ![image](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![image](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
